@@ -17,7 +17,9 @@ void Start()
     Camera@ camera = cameraNode.CreateComponent("Camera");
     
 	Viewport@ mainVP = Viewport(scene_, camera);
-	renderer.viewports[0] = mainVP; 
+	renderer.viewports[0] = mainVP;
+    
+    MakeObjects();
 }
 
 void CreateConsoleAndDebugHud()
@@ -78,7 +80,7 @@ void MoveCamera(float timeStep)
 
     // Movement speed as world units per second
     float MOVE_SPEED;
-    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 100.0f;
+    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 100.0f; else MOVE_SPEED = 10.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1f;
 
@@ -109,4 +111,47 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
 
     // Move the camera, scale movement with time step
     MoveCamera(timeStep);
+}
+
+void MakeObjects()
+{
+  
+    Model@ rb1 = Ribbon(50);
+}
+
+Model Ribbon(uint numVertices)
+{
+   Array<float> vertexData(numVertices , 0.0f);
+   Array<uint16> indexData(numVertices);
+   
+   for (uint16 i = 0; i<numVertices; i+1) indexData[i] = i;
+   
+   Model@ rb_Model = Model();
+   VertexBuffer@ vb = VertexBuffer();
+   IndexBuffer@ ib = IndexBuffer();
+   Geometry@ geom = Geometry();
+   
+        vb.shadowed = true;
+        vb.SetSize(numVertices, MASK_POSITION|MASK_NORMAL);
+        VectorBuffer temp;
+        for (uint i = 0; i < numVertices * 6; ++i)
+            temp.WriteFloat(vertexData[i]);
+        vb.SetData(temp);
+
+        ib.shadowed = true;
+        ib.SetSize(numVertices, false);
+        temp.Clear();
+        for (uint i = 0; i < numVertices; ++i)
+            temp.WriteUShort(indexData[i]);
+        ib.SetData(temp);
+
+   geom.SetVertexBuffer(0, vb);
+   geom.SetIndexBuffer(ib);
+   geom.SetDrawRange(TRIANGLE_LIST, 0, numVertices);
+
+   rb_Model.numGeometries = 1;
+   rb_Model.SetGeometry(0, 0, geom);
+   rb_Model.boundingBox = BoundingBox(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5));
+    
+    return rb_Model;
 }
