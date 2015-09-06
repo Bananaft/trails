@@ -5,6 +5,7 @@ float pitch = 0.0f; // Camera pitch angle
 
 void Start()
 {
+    log.level = 0;
     scene_ = Scene();
 	CreateConsoleAndDebugHud();
 
@@ -116,42 +117,45 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
 void MakeObjects()
 {
   
-    Model@ rb1 = Ribbon(50);
-}
-
-Model Ribbon(uint numVertices)
-{
-   Array<float> vertexData(numVertices , 0.0f);
-   Array<uint16> indexData(numVertices);
-   
-   for (uint16 i = 0; i<numVertices; i+1) indexData[i] = i;
-   
-   Model@ rb_Model = Model();
-   VertexBuffer@ vb = VertexBuffer();
-   IndexBuffer@ ib = IndexBuffer();
-   Geometry@ geom = Geometry();
-   
-        vb.shadowed = true;
-        vb.SetSize(numVertices, MASK_POSITION|MASK_NORMAL);
-        VectorBuffer temp;
-        for (uint i = 0; i < numVertices * 6; ++i)
-            temp.WriteFloat(vertexData[i]);
-        vb.SetData(temp);
-
-        ib.shadowed = true;
-        ib.SetSize(numVertices, false);
-        temp.Clear();
-        for (uint i = 0; i < numVertices; ++i)
-            temp.WriteUShort(indexData[i]);
-        ib.SetData(temp);
-
-   geom.SetVertexBuffer(0, vb);
-   geom.SetIndexBuffer(ib);
-   geom.SetDrawRange(TRIANGLE_LIST, 0, numVertices);
-
-   rb_Model.numGeometries = 1;
+    //Model@ rb1 = Ribbon(50);
+    Model@ rb_Model = Model();
+    
+    Geometry@ geom = Ribbon(50);
+    
+    rb_Model.numGeometries = 1;
    rb_Model.SetGeometry(0, 0, geom);
    rb_Model.boundingBox = BoundingBox(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5));
-    
-    return rb_Model;
+}
+
+Geometry Ribbon(uint numVertices)
+{
+    Array<float> vertexData(numVertices , 0.0f);
+    Array<uint16> indexData(numVertices);
+
+    for (uint16 i = 0; i<numVertices; ++i) indexData[i] = i;
+
+
+    VertexBuffer@ vb = VertexBuffer();
+    IndexBuffer@ ib = IndexBuffer();
+    Geometry@ geom = Geometry();
+
+    vb.shadowed = true;
+    vb.SetSize(numVertices, MASK_POSITION|MASK_NORMAL);
+    VectorBuffer temp;
+    for (uint i = 0; i < numVertices * 6; ++i)
+        temp.WriteFloat(vertexData[i]);
+    vb.SetData(temp);
+
+    ib.shadowed = true;
+    ib.SetSize(numVertices, false);
+    temp.Clear();
+    for (uint i = 0; i < numVertices; ++i)
+        temp.WriteUShort(indexData[i]);
+    ib.SetData(temp);
+
+    geom.SetVertexBuffer(0, vb);
+    geom.SetIndexBuffer(ib);
+    geom.SetDrawRange(TRIANGLE_LIST, 0, numVertices);
+
+    return geom;
 }
