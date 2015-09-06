@@ -119,16 +119,9 @@ void MakeObjects()
   
     //Model@ rb1 = Ribbon(50);
     Model@ rb_Model = Model();
+    uint16 numVertices = 50;
     
-    Geometry@ geom = Ribbon(50);
     
-    rb_Model.numGeometries = 1;
-   rb_Model.SetGeometry(0, 0, geom);
-   rb_Model.boundingBox = BoundingBox(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5));
-}
-
-Geometry Ribbon(uint numVertices)
-{
     Array<float> vertexData(numVertices , 0.0f);
     Array<uint16> indexData(numVertices);
 
@@ -156,6 +149,15 @@ Geometry Ribbon(uint numVertices)
     geom.SetVertexBuffer(0, vb);
     geom.SetIndexBuffer(ib);
     geom.SetDrawRange(TRIANGLE_LIST, 0, numVertices);
-
-    return geom;
+    
+    rb_Model.numGeometries = 1;
+   rb_Model.SetGeometry(0, 0, geom);
+   rb_Model.boundingBox = BoundingBox(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5));
 }
+
+//Geometry Ribbon(uint numVertices)
+//{
+//
+//
+//    return geom;
+//}
