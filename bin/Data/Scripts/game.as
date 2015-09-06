@@ -5,7 +5,7 @@ float pitch = 0.0f; // Camera pitch angle
 
 void Start()
 {
-    log.level = 0;
+   // log.level = 0;
     scene_ = Scene();
 	CreateConsoleAndDebugHud();
 
@@ -122,9 +122,11 @@ void MakeObjects()
     uint16 numVertices = 50;
     
     
-    Array<float> vertexData(numVertices , 0.0f);
+    Array<float> vertexData(numVertices * 6, 0.0f);
     Array<uint16> indexData(numVertices);
-
+    
+    for (uint16 i = 0; i<numVertices; ++i) vertexData[i] = Random();
+    
     for (uint16 i = 0; i<numVertices; ++i) indexData[i] = i;
 
 
@@ -153,6 +155,11 @@ void MakeObjects()
     rb_Model.numGeometries = 1;
    rb_Model.SetGeometry(0, 0, geom);
    rb_Model.boundingBox = BoundingBox(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5));
+   
+   Node@ node = scene_.CreateChild("rb_Model");
+   node.position = Vector3(0.0, 0.0, 0.0);
+    StaticModel@ object = node.CreateComponent("StaticModel");
+   object.model = rb_Model;
 }
 
 //Geometry Ribbon(uint numVertices)
