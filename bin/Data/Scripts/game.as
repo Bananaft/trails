@@ -116,12 +116,24 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
 
 void MakeObjects()
 {
-  
-    //Model@ rb1 = Ribbon(50);
+      
     Model@ rb_Model = Model();
-    uint16 numVertices = 50;
     
+   Geometry@ geom = Ribbon(50);
+
     
+   rb_Model.numGeometries = 1;
+   rb_Model.SetGeometry(0, 0, geom);
+   rb_Model.boundingBox = BoundingBox(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5));
+   
+   Node@ node = scene_.CreateChild("rb_Model");
+   node.position = Vector3(0.0, 0.0, 0.0);
+    StaticModel@ object = node.CreateComponent("StaticModel");
+   object.model = rb_Model;
+}
+
+Geometry@ Ribbon(uint16 numVertices)
+{
     Array<float> vertexData(numVertices * 6, 0.0f);
     Array<uint16> indexData(numVertices);
     
@@ -133,7 +145,7 @@ void MakeObjects()
     VertexBuffer@ vb = VertexBuffer();
     IndexBuffer@ ib = IndexBuffer();
     Geometry@ geom = Geometry();
-
+    
     vb.shadowed = true;
     vb.SetSize(numVertices, MASK_POSITION|MASK_NORMAL);
     VectorBuffer temp;
@@ -151,20 +163,6 @@ void MakeObjects()
     geom.SetVertexBuffer(0, vb);
     geom.SetIndexBuffer(ib);
     geom.SetDrawRange(TRIANGLE_LIST, 0, numVertices);
-    
-    rb_Model.numGeometries = 1;
-   rb_Model.SetGeometry(0, 0, geom);
-   rb_Model.boundingBox = BoundingBox(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5));
-   
-   Node@ node = scene_.CreateChild("rb_Model");
-   node.position = Vector3(0.0, 0.0, 0.0);
-    StaticModel@ object = node.CreateComponent("StaticModel");
-   object.model = rb_Model;
-}
 
-//Geometry Ribbon(uint numVertices)
-//{
-//
-//
-//    return geom;
-//}
+    return geom;
+}
