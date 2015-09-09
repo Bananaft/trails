@@ -137,7 +137,24 @@ Geometry@ Ribbon(uint16 numVertices)
     Array<float> vertexData(numVertices * 6, 0.0f);
     Array<uint16> indexData(numVertices);
     
-    for (uint16 i = 0; i<numVertices; ++i) vertexData[i] = Random();
+    for (uint16 i = 0; i<numVertices; ++i)
+    {
+        
+        if (i==0)
+        {
+            vertexData[0]   = 0;
+            vertexData[1] = 1;
+            vertexData[2] = 0;
+        }else if ((i&1)!=1){
+            vertexData[i*6]    = i-1;
+            vertexData[i*6+1]      = -1;
+            vertexData[i*6+2]    = 0;
+        } else {
+            vertexData[i*6]    = i-1;
+            vertexData[i*6+1]      = 1;
+            vertexData[i*6+2]    = 0;
+        }
+    }
     
     for (uint16 i = 0; i<numVertices; ++i) indexData[i] = i;
 
@@ -162,7 +179,7 @@ Geometry@ Ribbon(uint16 numVertices)
 
     geom.SetVertexBuffer(0, vb);
     geom.SetIndexBuffer(ib);
-    geom.SetDrawRange(TRIANGLE_LIST, 0, numVertices);
+    geom.SetDrawRange(TRIANGLE_STRIP , 0, numVertices);
 
     return geom;
 }
