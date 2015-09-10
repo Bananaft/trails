@@ -2,6 +2,7 @@ Scene@ scene_;
 Node@ cameraNode;
 float yaw = 0.0f; // Camera yaw angle
 float pitch = 0.0f; // Camera pitch angle
+bool wireframe =false;
 
 void Start()
 {
@@ -16,6 +17,7 @@ void Start()
 
 	cameraNode = Node();
     Camera@ camera = cameraNode.CreateComponent("Camera");
+    
     
 	Viewport@ mainVP = Viewport(scene_, camera);
 	renderer.viewports[0] = mainVP;
@@ -69,6 +71,18 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
             // Here we save in the Data folder with date and time appended
             screenshot.SavePNG(fileSystem.programDir + "Data/Screenshot_" +
                 time.timeStamp.Replaced(':', '_').Replaced('.', '_').Replaced(' ', '_') + ".png");
+        }
+    else if (key == KEY_F)
+        {
+            Camera@ cam = cameraNode.GetComponent("camera");
+            if (wireframe){
+                cam.fillMode = FILL_SOLID;
+                wireframe = false;
+            } else {
+                cam.fillMode = FILL_WIREFRAME;
+                wireframe = true;
+            }
+            
         }
 
 }
