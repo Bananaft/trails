@@ -133,7 +133,7 @@ void MakeObjects()
       
     Model@ rb_Model = Model();
     
-   Geometry@ geom = Ribbon(50);
+   Geometry@ geom = Ribbon(16);
 
     
    rb_Model.numGeometries = 1;
@@ -157,17 +157,19 @@ Geometry@ Ribbon(uint16 numVertices)
         if (i==0)
         {
             vertexData[0]   = 0;
-            vertexData[1] = 1;
+            vertexData[1] = -1;
             vertexData[2] = 0;
         }else if ((i&1)!=1){
-            vertexData[i*6]    = i-1;
+            vertexData[i*6]    = i-1.0;
             vertexData[i*6+1]      = -1;
             vertexData[i*6+2]    = 0;
         } else {
-            vertexData[i*6]    = i-1;
+            vertexData[i*6]    = i-1.0;
             vertexData[i*6+1]      = 1;
             vertexData[i*6+2]    = 0;
         }
+        
+        if (i==numVertices-1) vertexData[i*6] = i-2.0;
     }
     
     for (uint16 i = 0; i<numVertices; ++i) indexData[i] = i;
