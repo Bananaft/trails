@@ -1,1 +1,1 @@
-Scripts/game.as
+Scripts/SSDecals.as
